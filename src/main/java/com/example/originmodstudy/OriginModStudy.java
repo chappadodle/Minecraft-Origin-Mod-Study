@@ -1,6 +1,8 @@
 package com.example.originmodstudy;
 
+import com.example.originmodstudy.item.ModItems;
 import net.fabricmc.api.ModInitializer;
+import net.minecraft.resources.ResourceLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,10 +12,17 @@ public class OriginModStudy implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
-		// Arachne's powers are entirely data-driven (data/arachne/origins, data/arachne/powers) and
-		// registered automatically by Origins/Apoli's own data loaders — nothing to register here
-		// yet. This entrypoint exists for the arthropod-passive-targeting mixin's config (declared
-		// in fabric.mod.json) and as the place future custom PowerFactory registrations would go.
+		// Most of Arachne's kit is entirely data-driven (data/arachne/origins, data/arachne/powers)
+		// and registered automatically by Origins/Apoli's own data loaders. The Golden Spider Eye
+		// (the carnivore-diet equivalent of a golden apple) is real game content though, so it needs
+		// actual Java registration like any vanilla item would.
+		ModItems.registerModItems();
+
 		LOGGER.info("Arachne origin loaded");
+	}
+
+	/** Helper to build a ResourceLocation namespaced to this mod, e.g. arachne:golden_spider_eye. */
+	public static ResourceLocation id(String path) {
+		return new ResourceLocation(MOD_ID, path);
 	}
 }
