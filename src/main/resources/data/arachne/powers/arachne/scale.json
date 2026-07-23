@@ -17,5 +17,5 @@
 		"command": "scale set pehkui:base 1.0 @s"
 	},
 	"name": "Small Frame",
-	"description": "You are about 50% of a normal human's height and width (requires Pehkui) — the \"base\" scale affects both dimensions together, not just height."
+	"description": "You are about 50% of a normal human's height and width (requires Pehkui). The \"base\" scale affects both dimensions together, not just height."
 }
