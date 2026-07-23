@@ -22,6 +22,7 @@ the **Arachne** origin — a humanoid spider:
 - **Latch On**: sneak + right-click a nearby player to climb onto them like prey. A perch (you ride
   them), not free movement — sneak again to let go.
 - Can't use a shield.
+- Weakened while touching water — a spider out of its element.
 - **Golden Spider Eye**: a new food item, the carnivore-diet equivalent of a golden apple (which
   Arachne can't eat — apples aren't meat). Same crafting cost (8 gold ingots around the center
   item) and the same buff (Regeneration II for 5s, Absorption I for 2 minutes), just built around

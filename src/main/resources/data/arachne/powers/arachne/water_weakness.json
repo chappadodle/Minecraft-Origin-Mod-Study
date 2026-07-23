@@ -1,0 +1,20 @@
+{
+	"type": "origins:action_over_time",
+	"interval": 20,
+	"condition": {
+		"type": "origins:fluid_height",
+		"fluid": "minecraft:water",
+		"comparison": ">",
+		"compare_to": 0.0
+	},
+	"entity_action": {
+		"type": "origins:apply_effect",
+		"effect": {
+			"effect": "minecraft:weakness",
+			"amplifier": 0,
+			"duration": 40
+		}
+	},
+	"name": "Hydrophobic",
+	"description": "Water saps your strength — you're weakened while touching it, refreshed every second so it lingers for about 2 seconds after you get out."
+}

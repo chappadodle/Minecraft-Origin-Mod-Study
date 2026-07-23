@@ -13,7 +13,8 @@
 		"origins_minus:rappel",
 		"arachne:arachne/poison_immunity",
 		"arachne:arachne/scuttle",
-		"arachne:arachne/latch_on"
+		"arachne:arachne/latch_on",
+		"arachne:arachne/water_weakness"
 	],
 	"icon": {
 		"item": "minecraft:spider_eye"
