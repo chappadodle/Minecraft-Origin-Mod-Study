@@ -9,7 +9,8 @@
 		"arachne:harpy/talons",
 		"arachne:harpy/scale",
 		"arachne:harpy/scream",
-		"arachne:harpy/hardy_stomach"
+		"arachne:harpy/hardy_stomach",
+		"arachne:harpy/fire_vulnerability"
 	],
 	"icon": {
 		"item": "arachne:harpy_eye"

@@ -277,6 +277,24 @@ than expected once real Origins source was checked — see the gotchas below for
   bubble-trail spam from Siren's periodically-reapplied Water Breathing (and reused for Dolphin's
   Grace's own particles, for the same reason).
 
+- **A vertical pixel-art silhouette doesn't read as a Minecraft weapon — the diagonal
+  alternating-tone construction vanilla's own sword icons use is what actually sells it.** The
+  Fang tiers' first pass (a vertical blade/guard/grip stack) was wrong despite being a clean,
+  readable dagger *shape* in isolation — it didn't match the visual language every other tool/
+  weapon icon in the game uses. Fixed by dumping vanilla's real `diamond_sword.png`/
+  `iron_sword.png`/`netherite_sword.png` pixel grids directly (extracted from the mapped jar, same
+  technique as every other texture in this project) and reusing their exact technique — a -45°
+  diagonal blade alternating between a light and mid blade tone with a dark outline, a wider
+  crossguard, then a handle/pommel — just with several of the blade's taper rows removed (and the
+  guard/handle/pommel shifted to reconnect) to make it read as a short dagger instead of a full
+  sword, rather than inventing a new pixel-art style from scratch.
+- **`origins:modify_damage_taken` takes a `damage_condition` (an `origins:in_tag` check against a
+  *damage type* tag, e.g. `minecraft:is_fire`), not an entity condition** — confirmed via a real
+  working example (`more_kinetic_damage.json` in `apace100/origins-fabric`) before writing
+  Arachne's and Harpy's fire-vulnerability powers. Vanilla's own `minecraft:is_fire` tag (`
+  in_fire`, `on_fire`, `lava`, `hot_floor`, plus fireball projectile damage types) was reused
+  directly rather than hand-listing fire-related damage types.
+
 ## Build / verify
 
 ```bash

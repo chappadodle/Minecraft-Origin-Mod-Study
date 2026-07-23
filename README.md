@@ -26,6 +26,7 @@ fragile fast assassin, tanky bruiser, aerial skirmisher, and aquatic support/cro
 - Can't use a shield.
 - No fall damage from falls under 10 blocks.
 - Weakened while touching water — a spider out of its element.
+- Takes 50% more damage from fire — brittle, dry, and flammable.
 - Produces 6 string in your inventory every 20 minutes.
 - **Quickness**: noticeably faster base movement speed (+35%, well past Avian's own barely-there
   +20% tailwind) — spiders are quick for their size. A flat attribute bonus, not a potion effect.
@@ -70,6 +71,7 @@ fragile fast assassin, tanky bruiser, aerial skirmisher, and aquatic support/cro
 - 85% of normal height/width (via Pehkui).
 - **Hardy Stomach**: raw meat and rotten flesh are perfectly safe to eat — no Hunger effect, just
   a brief 2-second burst of Regeneration.
+- Takes 50% more damage from fire — hollow bones and feathers catch fast.
 
 ### Siren
 
@@ -100,8 +102,10 @@ Every origin gets a themed craftable weapon. Anyone can craft or swing either on
 on-hit effect only triggers for the matching origin — they're each origin's own signature weapon,
 not generically useful loot:
 
-- **Fang**: a light, fast dagger with a real dagger-shaped icon (not a recolored sword), in three
-  tiers — poisons on every hit, undead excluded, Arachne only. Every tier's tooltip spells out
+- **Fang**: a light, fast dagger with a real dagger-shaped icon — a shortened diagonal blade built
+  the same way vanilla's own sword icons are (alternating light/mid tones, a dark outline, a
+  distinct guard), not a recolored sword — in three tiers, each with its own blade and grip
+  color. Poisons on every hit, undead excluded, Arachne only. Every tier's tooltip spells out
   exactly what it does and who it's for.
   - **Fang** (base): iron-tier stats, Poison only. Crafted from a spider eye, an iron ingot, and a
     stick.
