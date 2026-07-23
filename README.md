@@ -19,8 +19,10 @@ the **Arachne** origin — a humanoid spider:
   `rappel` power directly rather than reimplementing it.
 - **Scuttle** (secondary key, unbound by default): a burst of Speed IV for 4 seconds, at the cost
   of burning through food much faster while it's active. 15 second cooldown.
-- **Latch On**: sneak + right-click a nearby player (or an armor stand) to climb onto them like
-  prey. A perch (you ride them), not free movement — sneak again to let go.
+- **Latch On**: right-click a nearby player (or an armor stand) to climb onto them like prey. A
+  perch (you ride them), not free movement — sneak to let go. Since it's not gated by sneaking
+  anymore, right-clicking near a player in general (not just when you mean to latch on) can
+  trigger it — worth knowing before it surprises you mid-conversation.
 - Can't use a shield.
 - Weakened while touching water — a spider out of its element.
 - Produces 6 string in your inventory every 20 minutes.
