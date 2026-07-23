@@ -1,0 +1,34 @@
+{
+	"schemaVersion": 1,
+	"id": "arachne",
+	"version": "${version}",
+	"name": "Origin Mod Study: Arachne",
+	"description": "An Origins addon adding the Arachne origin (a humanoid spider), built as a worked, documented example of the data-driven pattern for adding more origins later. See TEMPLATE.md.",
+	"authors": [
+		"You"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/arachne/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.example.originmodstudy.OriginModStudy"
+		]
+	},
+	"mixins": [
+		"arachne.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~1.20.1",
+		"java": ">=17",
+		"fabric-api": "*",
+		"origins": ">=1.10.2",
+		"origins_minus": ">=2.4.0",
+		"pehkui": ">=3.8.3"
+	}
+}

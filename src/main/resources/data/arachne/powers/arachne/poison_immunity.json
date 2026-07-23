@@ -1,0 +1,6 @@
+{
+	"type": "origins:effect_immunity",
+	"effect": "minecraft:poison",
+	"name": "Venom Tolerance",
+	"description": "You are completely immune to poison — your own venom holds no danger for you."
+}

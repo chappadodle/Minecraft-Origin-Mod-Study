@@ -1,0 +1,111 @@
+# CLAUDE.md
+
+Guidance for Claude Code when working in this repository.
+
+## What this is
+
+**Origin Mod Study** — an **experimental** Minecraft **1.20.1 / Fabric** addon for the
+[Origins](https://modrinth.com/mod/origins) mod (a learning/hobby project). Adds the **Arachne**
+origin (a humanoid spider) as a fully worked, documented example of a data-driven pattern for
+adding more origins later — see **TEMPLATE.md** for that pattern and its decision checklist.
+
+## Critical environment facts (read before building)
+
+- **Mappings are Mojang official** (`loom.officialMojangMappings()`), NOT Yarn — same convention
+  as this author's other Fabric projects (e.g. `mythicarsenal`). Origins/Apoli's own docs and
+  GitHub source are written in Yarn names; see TEMPLATE.md §4 for the translation table and why
+  it only matters for vanilla Minecraft classes, never third-party mod classes.
+- **JDK requirement is split:** Gradle needs **Java 21+ to run**, but the mod compiles for
+  **Java 17** (`options.release = 17`). A JDK 17 will be *rejected* by Gradle; a JRE (no `javac`)
+  fails with "does not provide JAVA_COMPILER". This environment ships only a JRE by default — a
+  portable Temurin 21 JDK was downloaded to `~/.local/jdks/temurin-21` for build verification;
+  point `JAVA_HOME`/`org.gradle.java.home` at a JDK 21+ before running Gradle.
+- **Almost everything is data**, not Java. Arachne's own powers are 3 references to base Origins
+  power IDs + 6 small custom power JSON files + one origin file + two entity-type tags — see
+  `src/main/resources/data/arachne/`. Only one requirement (arthropods staying passive until
+  attacked) needed real code, because Origins has no data-driven way to modify mob AI targeting
+  (tracked upstream as `apace100/origins-fabric#144`, still open).
+- **Compile-time-only dependencies for the one custom-code power:**
+  `ArthropodPassiveTargetMixin.java` calls Origins' own `OriginComponent` API, which pulls in
+  Cardinal Components API and Calio — both are already embedded inside Origins' published jar via
+  Fabric's jar-in-jar mechanism (so they're present at runtime for free), but **not** exposed to
+  javac from that jar, so they're declared separately as `modCompileOnly` in `build.gradle` from
+  their own Maven repos (Ladysnake's maven for Cardinal Components, JitPack for Calio — see the
+  repo comments for exactly why each one was needed and how those coordinates were found).
+- **Powers under `powers/<origin_id>/` need the subfolder in their ID.** A file at
+  `data/arachne/powers/arachne/foo.json` is referenced as `arachne:arachne/foo`, not
+  `arachne:foo` — Origins resolves power IDs as a literal file path relative to the `powers`
+  folder. Got this wrong once already (all six custom powers silently failed to apply until
+  fixed); see TEMPLATE.md §1.
+- **`origins:execute_command` runs Pehkui's `/scale` command with a subtlety that broke it
+  twice.** (1) Argument order is `scale <operation> <scale_type> <value> [<targets>]` — verified
+  directly from `ScaleCommand.java` in Pehkui's own source, not from docs/forum posts, several of
+  which describe it wrong. (2) `<scale_type>` needs an explicit `pehkui:` namespace
+  (`pehkui:base`, not `base`) — `ScaleTypeArgumentType` parses it as a plain Minecraft
+  `Identifier`, which defaults an unqualified word to the `minecraft:` namespace and then fails
+  to find it in Pehkui's registry. The sibling `operation` argument (`set`/`add`/...) *does*
+  default to Pehkui's own namespace when unqualified, which is what made this so easy to miss —
+  the two arguments look symmetric in a command string but are parsed by different argument
+  types with different fallback behavior. Both bugs failed *silently*: no in-game error, no
+  crash, the command just never took effect. (3) Separately, `entity_action_added` only fires on
+  world join/leave, not on choosing the origin — `entity_action_gained`/`entity_action_lost` are
+  needed too so the effect applies immediately on selection, not just after a relog.
+- **Dependency versions are pinned to what's actually installed** in this machine's PrismLauncher
+  test instances ("SOLO origin" and "1.20.1"), not just "whatever's newest" — see
+  `gradle.properties` for the full list and reasoning.
+- **The mixin's core trick needs no custom persistent state.** Vanilla `LivingEntity` already
+  tracks `getLastHurtByMob()` on every entity; checking that against the potential target inside
+  `TargetGoal#canAttack` gives "friendly until this specific mob is hit by this specific player,
+  then hostile toward them" for free, without inventing any new NBT/Cardinal Components data.
+
+## Build / verify
+
+```bash
+JAVA_HOME=~/.local/jdks/temurin-21 ./gradlew build   # compile + build mod jar -> build/libs/
+```
+
+`runClient` needs a display and hasn't been run in this environment — in-game verification (does
+the origin appear in the picker, do the powers behave as specified, does the mixin correctly
+suppress/restore arthropod hostility) is a manual step: drop the built jar into either
+PrismLauncher instance's `mods/` folder alongside the already-installed Origins/Origins
+Minus/Pehkui/Fabric API jars.
+
+JSON-lint new data pack files before building:
+```bash
+python3 -c "import json,glob;[json.load(open(f)) for f in glob.glob('src/main/resources/**/*.json', recursive=True)]"
+```
+
+One benign warning appears on every clean build: Loom's `remapSourcesJar` step fails to remap
+`ArthropodPassiveTargetMixin.java` specifically (a `Mercury`/ECJ source-remapper limitation,
+unrelated to the pattern-matching `instanceof` avoided in that file) — this only affects the
+auxiliary `-sources.jar`'s IDE-navigation copy of that one file, not compilation or the real mod
+jar. `BUILD SUCCESSFUL` with this warning present is expected, not a regression.
+
+## Layout
+
+- `src/main/java/com/example/originmodstudy/`
+  - `OriginModStudy.java` — main init. Registers nothing itself; exists for the mixin config
+    entrypoint since every power is data-driven or reused.
+  - `mixin/ArthropodPassiveTargetMixin.java` — the one custom-code power (requirement: friendly
+    arthropods).
+- `src/main/resources/data/arachne/`
+  - `origins/arachne.json` — the origin: name, description, icon, and its power list.
+  - `origins/example_stub.json` — TEMPLATE.md's worked-example starting point; deliberately not
+    wired into the origin picker.
+  - `powers/arachne/*.json` — the six custom powers (night vision, max health, armor, tracking
+    glow, scale, on-hit poison). Each has an inline `name`/`description` — Origins supports these
+    as plain strings directly on the power JSON, so no separate lang file entries were needed.
+  - `tags/entity_types/enemies.json` — curated hostile-mob list for the tracking-glow power.
+  - `tags/entity_types/friendly_arthropods.json` — spider/cave_spider/silverfish/endermite (the
+    vanilla arthropod grouping; bees deliberately excluded, they aren't in it).
+- `src/main/resources/data/origins/origin_layers/origin.json` — the merge file that actually adds
+  Arachne to the standard origin-picker GUI (see TEMPLATE.md §2 for why this path/format).
+
+## Conventions & gotchas
+
+- Only commit when asked. Build artifacts (`build/`, `.gradle/`, `run/`) are gitignored.
+- When adding a new custom power JSON, verify its power-type schema against the real thing before
+  guessing field names — either the [origins-docs](https://github.com/apace100/origins-docs)
+  markdown source (more reliable than the rendered readthedocs site, which 404s on some paths) or
+  a real power file from `apace100/origins-fabric`'s `1.20` branch via `gh api`. Every power type
+  used in this repo was verified this way, not assumed from memory.
