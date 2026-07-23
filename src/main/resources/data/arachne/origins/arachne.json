@@ -14,7 +14,8 @@
 		"arachne:arachne/poison_immunity",
 		"arachne:arachne/scuttle",
 		"arachne:arachne/latch_on",
-		"arachne:arachne/water_weakness"
+		"arachne:arachne/water_weakness",
+		"arachne:arachne/silk_glands"
 	],
 	"icon": {
 		"item": "minecraft:spider_eye"

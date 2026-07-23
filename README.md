@@ -23,6 +23,7 @@ the **Arachne** origin — a humanoid spider:
   them), not free movement — sneak again to let go.
 - Can't use a shield.
 - Weakened while touching water — a spider out of its element.
+- Produces 6 string in your inventory every 20 minutes.
 - **Golden Spider Eye**: a new food item, the carnivore-diet equivalent of a golden apple (which
   Arachne can't eat — apples aren't meat). Same crafting cost (8 gold ingots around the center
   item) and the same buff (Regeneration II for 5s, Absorption I for 2 minutes), just built around
