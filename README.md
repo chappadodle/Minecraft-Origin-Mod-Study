@@ -23,6 +23,7 @@ opposites, a fragile fast assassin versus a tanky dreadful bruiser:
 - **Scuttle** (secondary key, unbound by default): a burst of Speed IV for 4 seconds, at the cost
   of burning through food much faster while it's active. 15 second cooldown.
 - Can't use a shield.
+- No fall damage from falls under 10 blocks.
 - Weakened while touching water — a spider out of its element.
 - Produces 6 string in your inventory every 20 minutes.
 - **Golden Spider Eye**: a new food item, the carnivore-diet equivalent of a golden apple (which
