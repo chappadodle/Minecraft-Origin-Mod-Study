@@ -52,6 +52,12 @@ public class ModItems {
 	public static final Item PETRIFYING_TRIDENT = register("petrifying_trident",
 			new PetrifyingTridentItem(new Item.Properties().durability(250)));
 
+	// A lighter, faster throwing spear than the vanilla trident (6.0 damage / -2.4 speed instead
+	// of 8.0 / -2.9) — Harpy's weapon. Bleed on hit and a bonus while thrown mid-flight only
+	// trigger for the Harpy origin; see HarpyJavelinItem and ThrownTridentMixin.
+	public static final Item HARPY_JAVELIN = register("harpy_javelin",
+			new HarpyJavelinItem(new Item.Properties().durability(200)));
+
 	private static Item register(String name, Item item) {
 		return Registry.register(BuiltInRegistries.ITEM, OriginModStudy.id(name), item);
 	}
@@ -63,6 +69,7 @@ public class ModItems {
 		ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.COMBAT).register(entries -> {
 			entries.accept(FANG);
 			entries.accept(PETRIFYING_TRIDENT);
+			entries.accept(HARPY_JAVELIN);
 		});
 	}
 }

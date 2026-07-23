@@ -66,7 +66,7 @@ bruiser, and aerial skirmisher.
 
 ### Weapons
 
-Both origins get a themed craftable weapon. Anyone can craft or swing either one, but the bonus
+Every origin gets a themed craftable weapon. Anyone can craft or swing either one, but the bonus
 on-hit effect only triggers for the matching origin — they're each origin's own signature weapon,
 not generically useful loot:
 
@@ -77,6 +77,13 @@ not generically useful loot:
   that briefly petrifies whatever it hits (a lighter dose than Medusa's own Petrifying Bite) —
   Medusa only.
   Crafted from stone and iron ingots.
+- **Harpy Javelin**: a real 3D-modeled throwing spear (a custom Blockbench model, not a flat
+  icon), lighter and faster-swinging than the vanilla trident it's built on. Causes Bleed on hit
+  (undead excluded), whether thrown or swung, and deals bonus damage on a thrown hit landed while
+  flying — Harpy only. Crafted from an iron ingot, a stick, and a feather. Note: it briefly
+  renders as a plain vanilla trident shape mid-flight after being thrown (a real Minecraft engine
+  limitation for any trident-based weapon, not specific to this one) — the custom model shows
+  correctly in your hand, in the inventory, and on your back.
 
 It's also written as a **worked, documented example** of a data-driven pattern for adding more
 origins — see **[`TEMPLATE.md`](TEMPLATE.md)**. Medusa is the second worked example (the first

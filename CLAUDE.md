@@ -120,6 +120,48 @@ gotchas below for exactly why, verified rather than assumed in both cases.
   them fit — see `power/ScreamConeAction.java` for the resulting custom Apoli
   `EntityActionType` registration (a dot-product cone check + per-target outward knockback), the
   correct escalation once the data-driven options are actually exhausted, not just assumed absent.
+- **A thrown trident-type item's mid-air visual is hardcoded, completely separate from its item
+  model.** Decompiled (via a locally-fetched CFR jar, since Loom's cache had no Minecraft sources
+  jar — see "Build / verify" below for how) `TridentItem.releaseUsing` and `ThrownTridentRenderer`
+  directly rather than assume: `releaseUsing` always constructs `new ThrownTrident(level, player,
+  itemStack)` — no override point for a different thrown-entity type — and that entity's own
+  `EntityType` is hardcoded to `EntityType.TRIDENT` even inside `ThrownTrident`'s own
+  itemstack-carrying constructor. Worse, `ThrownTridentRenderer` doesn't even look at the carried
+  itemstack for its visual: it renders a dedicated vanilla `TridentModel` baked from
+  `ModelLayers.TRIDENT` with a hardcoded `textures/entity/trident.png`, full stop. This means any
+  `TridentItem` subclass (Petrifying Trident, Harpy Javelin) — no matter how its own item model is
+  reskinned — will always render as a plain vanilla trident shape for the moment it's actually
+  flying through the air after being thrown; the custom model only ever shows in-hand, in the
+  inventory, and equipped-on-back. Fixing this for real would need a genuinely new `EntityType` +
+  matching `EntityRenderer` (e.g. one that renders the carried `ItemStack` via `ItemRenderer`
+  instead of a hardcoded model, the same technique vanilla's `ThrownItemRenderer` uses for
+  snowballs/eggs) — real scope, deliberately not done for the Harpy Javelin; see
+  `ThrownTridentMixin`'s class doc.
+- **Vanilla's real on-hit damage for a thrown trident bypasses `ItemStack.hurtEnemy` entirely.**
+  Also found by decompiling rather than assuming: `ThrownTrident.onHitEntity` calls
+  `entity.hurt(damageSource, f)` directly — `hurtEnemy` on the `TridentItem`/subclass is *only*
+  ever invoked for a melee swing (`LivingEntity.doHurtTarget`'s own code path). A weapon that
+  wants its bonus on-hit behavior (Harpy Javelin's Bleed + airborne bonus damage) to also apply to
+  a *thrown* hit needs a second mechanism entirely — `ThrownTridentMixin` handles this via
+  `@ModifyArg` on the `entity.hurt(...)` call (to add bonus damage) and a TAIL `@Inject` (to apply
+  Bleed), both gated on `tridentItem.getItem() instanceof HarpyJavelinItem`.
+- **`@Shadow` a method only when it's actually declared on the mixin's target class — inherited
+  superclass methods don't need it and are safer reached by a plain cast.** `ThrownTrident`'s
+  `getOwner()` is real but declared on `Projectile` (a superclass), not on `ThrownTrident` itself
+  (confirmed via `javap`). Rather than risk a `@Shadow` stub against a method that isn't literally
+  on the target class, `ThrownTridentMixin` casts `this` to the real, already-compiled `Projectile`
+  type (`((Projectile) (Object) this).getOwner()`) and calls the already-public method directly —
+  always valid at runtime since `ThrownTrident` genuinely *is* a `Projectile`, and it sidesteps any
+  uncertainty about how far up the hierarchy Mixin's shadow resolution actually looks.
+- **No Minecraft sources jar was cached, so `javap` alone couldn't show method bodies — a locally
+  downloaded CFR jar (`org.benf:cfr` from Maven Central, a well-known public Java decompiler)
+  filled that gap.** `javap -p` on classes extracted from Loom's mapped jar (the project's
+  long-standing verification technique) only gives signatures, which was enough for every prior
+  gotcha in this file but not for understanding what `TridentItem.releaseUsing`/`ThrownTrident
+  .onHitEntity`/`ThrownTridentRenderer.render` actually *do* internally. Running CFR against the
+  same extracted `.class` files produced real (if variable-name-mangled) Java source, same
+  Mojmap signatures throughout since it decompiles the already-remapped classes — reusable for any
+  future gotcha investigation that needs method bodies, not just signatures.
 - **Registering into Apoli's own registries (not just Origins') needs Apoli itself as a compile
   dependency, and its POM pulls in more than you'd expect.** `ApoliRegistries`/`ActionFactory`
   (used by `ScreamConeAction`) live in Apoli's own package, so `com.github.apace100:apoli` had to
@@ -164,10 +206,13 @@ jar. `BUILD SUCCESSFUL` with this warning present is expected, not a regression.
   - `item/ModItems.java` — the real items this mod adds: `GOLDEN_SPIDER_EYE` (a craftable, edible
     carnivore-diet food), `ARACHNE_EYE`/`MEDUSA_EYE`/`HARPY_EYE` (icon-only, no recipe, not in any
     creative tab — exist purely to give each origin a real picker icon instead of a borrowed
-    vanilla item), and `FANG`/`PETRIFYING_TRIDENT` (craftable weapons — anyone can craft/swing
-    either, but the poison/petrify on-hit effect only triggers if the wielder has the matching
-    origin, checked via `OriginUtil` in `hurtEnemy`; see `util/OriginUtil.java` below for why
-    that's a hit-time check, not a recipe restriction).
+    vanilla item), and `FANG`/`PETRIFYING_TRIDENT`/`HARPY_JAVELIN` (craftable weapons — anyone can
+    craft/swing either, but the poison/petrify/bleed on-hit effect only triggers if the wielder has
+    the matching origin, checked via `OriginUtil` in `hurtEnemy`; see `util/OriginUtil.java` below
+    for why that's a hit-time check, not a recipe restriction). `HARPY_JAVELIN` is also this
+    project's first item with a real custom 3D model (Blockbench-authored by the user, not a
+    recolored flat icon like every other item here) — see `assets/arachne/models/item/
+    harpy_javelin.json`.
   - `util/OriginUtil.java` — `hasOrigin(LivingEntity, ResourceLocation)`, the same
     `ModComponents.ORIGIN`/`OriginLayers` lookup `ArthropodPassiveTargetMixin` uses, pulled out so
     the two origin-gated weapons don't duplicate it. **Vanilla's `CraftingRecipe#matches` has no
@@ -189,6 +234,11 @@ jar. `BUILD SUCCESSFUL` with this warning present is expected, not a regression.
     specifically (requirement: friendly arthropods) — distinct from the items/effect/action above,
     each of which is custom code for a different reason (real new content, or a registry Apoli
     itself is designed for addons to extend into).
+  - `mixin/ThrownTridentMixin.java` — makes a thrown Harpy Javelin's on-hit damage go through the
+    same Harpy-origin-gated Bleed/airborne-bonus rules a melee hit gets, since vanilla's real
+    thrown-trident damage path (`ThrownTrident.onHitEntity`) completely bypasses `hurtEnemy`. See
+    the gotchas above for the decompilation that found this and why the mid-flight visual is a
+    known, accepted limitation rather than something this mixin also fixes.
 - `src/main/resources/data/arachne/`
   - `origins/arachne.json` — the origin: name, description, icon (`arachne:arachne_eye`), and its
     power list (16 entries as of this writing — a mix of references to base-Origins/Origins Minus
