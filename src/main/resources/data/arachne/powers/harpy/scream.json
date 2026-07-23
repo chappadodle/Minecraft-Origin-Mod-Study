@@ -15,6 +15,19 @@
 				"pitch": 1.0
 			},
 			{
+				"type": "origins:spawn_particles",
+				"particle": {
+					"type": "minecraft:sonic_boom"
+				},
+				"count": 1,
+				"force": true,
+				"spread": {
+					"x": 0.1,
+					"y": 0.1,
+					"z": 0.1
+				}
+			},
+			{
 				"type": "arachne:cone_knockback",
 				"radius": 8.0,
 				"cone_angle": 90.0,

@@ -35,10 +35,10 @@
 			"effect": {
 				"effect": "arachne:bleed",
 				"amplifier": 0,
-				"duration": 60
+				"duration": 200
 			}
 		}
 	},
 	"name": "Talons",
-	"description": "Bare-handed strikes deal 2.5 extra hearts of damage and cause Bleed for 3 seconds (undead immune) — behaves just like Poison, but nothing is immune to it purely by being Poison-resistant."
+	"description": "Bare-handed strikes deal 2.5 extra hearts of damage and cause Bleed for 10 seconds (undead immune). Ticks like Poison, but unlike Poison it can kill."
 }

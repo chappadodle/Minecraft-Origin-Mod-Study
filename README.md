@@ -51,15 +51,17 @@ bruiser, and aerial skirmisher.
 - **Glide**: drift down slowly when falling; hold sneak to drop out of the glide and fall
   normally.
 - **Wings**: true flight, always — no elytra item needed.
-- **Sudden Gust** (primary key, unbound by default): a flight speed boost on a 5 second cooldown
-  — effectively unlimited flight.
-- **Talons**: bare-handed strikes deal 2.5 extra hearts of damage and inflict **Bleed** for 3
-  seconds (undead immune) — a brand new status effect added by this mod, mechanically identical
-  to Poison (same tick-damage behavior, verified against the game's actual source) but with its
-  own name/color, so Harpy's claws don't read as "poisonous."
-- **Scream** (secondary key, unbound by default): a shrieking blast that knocks back whatever's
-  in front of you within 8 blocks — behind you is completely unaffected. 20 second cooldown. Uses
-  a real barn owl screech recording (CC BY-SA 4.0, credited in [`CREDITS.md`](CREDITS.md)).
+- **Sudden Gust** (primary key, unbound by default, hold while flying): a firework-rocket-style
+  boost in whatever direction you're currently facing, not a launch into the air. 5 second
+  cooldown — effectively unlimited flight.
+- **Talons**: bare-handed strikes deal 2.5 extra hearts of damage and inflict **Bleed** for 10
+  seconds (undead immune) — a brand new status effect added by this mod, ticking just like Poison
+  (same real tick-damage timing, verified against the game's actual source) but — unlike Poison —
+  it can kill.
+- **Scream** (secondary key, unbound by default): a shrieking blast (with a Sonic Boom particle
+  burst) that knocks back whatever's in front of you within 8 blocks — behind you is completely
+  unaffected. 20 second cooldown. Uses a real barn owl screech recording (CC BY-SA 4.0, credited
+  in [`CREDITS.md`](CREDITS.md)).
 - 85% of normal height/width (via Pehkui).
 
 ### Weapons

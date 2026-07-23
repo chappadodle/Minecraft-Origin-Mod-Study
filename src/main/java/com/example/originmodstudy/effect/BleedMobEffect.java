@@ -5,13 +5,14 @@ import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
 
 /**
- * A from-scratch clone of vanilla Poison's real tick behavior. Verified via {@code javap} on the
- * actual game classes that Poison/Wither/Regeneration aren't implemented via subclass overrides
- * at all — their damage logic is hardcoded by identity-check
+ * A from-scratch clone of vanilla Poison's real tick behavior, with one deliberate difference.
+ * Verified via {@code javap} on the actual game classes that Poison/Wither/Regeneration aren't
+ * implemented via subclass overrides at all — their damage logic is hardcoded by identity-check
  * ({@code if (this == MobEffects.POISON) {...}}) directly inside the shared base
  * {@code MobEffect.applyEffectTick()} method. A brand new effect gets none of that behavior for
- * free, so this class reproduces it exactly: damage every {@code 25 >> amplifier} ticks (Poison
- * I's real interval), 1 damage via a magic damage source, never dropping health at or below 1.
+ * free, so this class reproduces the timing exactly (damage every {@code 25 >> amplifier} ticks —
+ * Poison I's real interval — 1 damage via a magic damage source), but per request, Bleed can
+ * actually kill: it does not carry over Poison's own "never drops health at or below 1" cap.
  *
  * <p>Also confirmed vanilla's undead-immunity check ({@code LivingEntity#canBeAffected}) only
  * special-cases the literal vanilla Poison/Regeneration objects, so this effect does <b>not</b>
@@ -35,8 +36,6 @@ public class BleedMobEffect extends MobEffect {
 
 	@Override
 	public void applyEffectTick(LivingEntity entity, int amplifier) {
-		if (entity.getHealth() > 1.0F) {
-			entity.hurt(entity.damageSources().magic(), 1.0F);
-		}
+		entity.hurt(entity.damageSources().magic(), 1.0F);
 	}
 }
