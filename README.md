@@ -9,7 +9,7 @@ the **Arachne** origin — a humanoid spider:
 
 - Carnivore-only diet, can climb any surface, traverses/crafts cobwebs freely. Immune to poison.
 - Dangerous creatures glow with an outline once spotted (tracking).
-- ~60% of normal height/width (via [Pehkui](https://modrinth.com/mod/pehkui)).
+- ~50% of normal height/width (via [Pehkui](https://modrinth.com/mod/pehkui)).
 - Attacks poison the target for 10 seconds (undead immune, 5s cooldown) and briefly web-trap them
   (2s cooldown on the web).
 - Every arthropod (spider, cave spider, silverfish, endermite) is friendly — until you attack it.

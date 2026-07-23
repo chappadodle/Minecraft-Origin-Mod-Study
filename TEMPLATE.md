@@ -90,7 +90,7 @@ Arachne's own requirements, classified this way, are the worked example:
 | Cobweb traversal + crafting | 1 — reused `origins:master_of_webs` |
 | Night vision, health, armor | 2 — `origins:night_vision` / `origins:attribute` with our own values |
 | Enemy tracking glow | 2 — `origins:entity_glow` with our own conditions |
-| 60% scale | 3 — `origins:action_on_callback` → Pehkui's `/scale` command |
+| 50% scale | 3 — `origins:action_on_callback` → Pehkui's `/scale` command |
 | On-hit poison | 2 — `origins:target_action_on_hit` with our own values |
 | Arthropods passive until attacked | 4 — no data path exists; one mixin |
 

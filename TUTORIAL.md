@@ -112,10 +112,14 @@ them by ID. Zero new files needed for three of the eight original requirements.
 - `tracking_glow.json` — makes anything in the `arachne:enemies` tag (a curated list of hostile
   mobs, in `tags/entity_types/enemies.json`) glow once you can see it, using the built-in
   `origins:entity_glow` power type with a `can_see` condition.
-- `scale.json` — the 60%-size requirement. There's no built-in Origins↔Pehkui integration, so
-  this power runs Pehkui's own `/scale set base @s 0.6` command automatically whenever the power
-  is gained (and resets it to `1.0` when lost), via the generic `origins:action_on_callback` power
-  type. Still zero custom Java — just telling an existing power type to run a command.
+- `scale.json` — the 50%-size requirement. There's no built-in Origins↔Pehkui integration, so
+  this power runs Pehkui's own `/scale set pehkui:base 0.5 @s` command automatically whenever the
+  power is gained (and resets it to `1.0` when lost), via the generic `origins:action_on_callback`
+  power type. Still zero custom Java — just telling an existing power type to run a command. Two
+  non-obvious things had to be right for this to actually work, both covered in `CLAUDE.md`:
+  Pehkui's `<scale_type>` argument needs the `pehkui:` namespace explicitly (a bare `base` silently
+  resolves to `minecraft:base`, which doesn't exist), and the callback needs both the
+  "just chosen" and "world (re)joined" trigger fields, not just one.
 - `on_hit_poison.json` — 10 seconds of poison on your attacks, skipped for undead targets, with a
   5-second cooldown. Uses `origins:target_action_on_hit` (applies an action to whatever you hit)
   with a `target_condition` excluding the `undead` entity group.
